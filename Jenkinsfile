@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:20-alpine'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
     
     stages {
         stage('Checkout') {
@@ -18,8 +13,10 @@ pipeline {
             steps {
                 echo 'Installing Node.js...'
                 sh '''
-                    curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-                    apt-get install -y nodejs
+                    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo bash -
+                    sudo apt-get install -y nodejs
+                    node --version
+                    npm --version
                 '''
             }
         }
