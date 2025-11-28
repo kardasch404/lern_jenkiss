@@ -13,11 +13,8 @@ pipeline {
             steps {
                 echo 'Installing Node.js...'
                 sh '''
-                    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-                    export NVM_DIR="$HOME/.nvm"
-                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                    nvm install 20
-                    nvm use 20
+                    wget -qO- https://nodejs.org/dist/v20.11.0/node-v20.11.0-linux-x64.tar.xz | tar -xJ
+                    export PATH=$PWD/node-v20.11.0-linux-x64/bin:$PATH
                     node --version
                     npm --version
                 '''
@@ -28,9 +25,7 @@ pipeline {
             steps {
                 echo 'Installing dependencies...'
                 sh '''
-                    export NVM_DIR="$HOME/.nvm"
-                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                    nvm use 20
+                    export PATH=$PWD/node-v20.11.0-linux-x64/bin:$PATH
                     npm ci
                 '''
             }
@@ -40,9 +35,7 @@ pipeline {
             steps {
                 echo 'Running ESLint...'
                 sh '''
-                    export NVM_DIR="$HOME/.nvm"
-                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                    nvm use 20
+                    export PATH=$PWD/node-v20.11.0-linux-x64/bin:$PATH
                     npm run lint
                 '''
             }
@@ -52,9 +45,7 @@ pipeline {
             steps {
                 echo 'Running Tests...'
                 sh '''
-                    export NVM_DIR="$HOME/.nvm"
-                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                    nvm use 20
+                    export PATH=$PWD/node-v20.11.0-linux-x64/bin:$PATH
                     npm run test
                 '''
             }
@@ -64,9 +55,7 @@ pipeline {
             steps {
                 echo 'Building application...'
                 sh '''
-                    export NVM_DIR="$HOME/.nvm"
-                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                    nvm use 20
+                    export PATH=$PWD/node-v20.11.0-linux-x64/bin:$PATH
                     npm run build
                 '''
             }
