@@ -1,8 +1,6 @@
 pipeline {
     agent any
-    tools { 
-        nodejs 'NodeJS-20' 
-    }
+    
     stages {
         stage('Checkout') {
             steps {
@@ -10,15 +8,6 @@ pipeline {
                 checkout scm
             }
         }
-
-        // stage('Install Backend Dependencies') {
-        //     steps {
-        //         echo 'Installing backend deps...'
-        //         dir('CareFlow-BackEnd') {
-        //             sh 'npm install'
-        //         }
-        //     }
-        // }
 
         stage('Install Dependencies') {
             steps {
@@ -47,48 +36,24 @@ pipeline {
                 sh 'npm run build'
             }
         }
-
-
-    //     stage('Test_0') {
-    // parallel {
-    //     stage('Backend Tests') {
-    //         steps {
-    //             echo 'Running Backend Tests...'
-    //             // dir('CareFlow-BackEnd') {
-    //             //     sh 'npm test || true'
-    //             // }
-    //         }
-    //     }
-
-//         stage('Frontend Tests') {
-//             steps {
-//                 echo 'Running Frontend Tests...'
-//                 // dir('CareFlow-FrontEnd') {
-//                 //     sh 'npm test || true'
-//                 // }
-//             }
-//         }
-//     }
-// }
-
-
-//        stage('Docker Compose Up') {
-//     steps {
-//         echo 'Starting Containers...'
-//         sh 'docker-compose -d --build'
-//     }
-// }
-
+        
+        stage('Archive Artifacts') {
+            steps {
+                echo 'Archiving build artifacts...'
+                archiveArtifacts artifacts: 'dist/**', fingerprint: true
+            }
+        }
     }
 
     post {
-    success {
-        echo 'Build succeeded, cleaning up...'
-        // sh 'docker compose down || true'
+        always {
+            cleanWs()
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
     }
-    failure {
-        echo 'Build failed, cleaning up...'
-        // sh 'docker compose down || true'
-    }
-}
 }
