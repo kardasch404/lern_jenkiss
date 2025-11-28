@@ -20,20 +20,31 @@ pipeline {
         //     }
         // }
 
-        stage('Install Frontend Dependencies') {
+        stage('Install Dependencies') {
             steps {
-                echo 'Installing frontend deps...'
-                dir('CareFlow-FrontEnd') {
-                    sh 'npm install'
-                }
+                echo 'Installing dependencies...'
+                sh 'npm ci'
+            }
+        }
+        
+        stage('Lint') {
+            steps {
+                echo 'Running ESLint...'
+                sh 'npm run lint'
             }
         }
 
         stage('Test') {
             steps {
                 echo 'Running Tests...'
-                // dir('CareFlow-BackEnd') { sh 'npm test || true' }
-                // dir('CareFlow-FrontEnd') { sh 'npm test || true' }
+                sh 'npm run test'
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                echo 'Building application...'
+                sh 'npm run build'
             }
         }
 
