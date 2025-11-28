@@ -13,8 +13,11 @@ pipeline {
             steps {
                 echo 'Installing Node.js...'
                 sh '''
-                    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo bash -
-                    sudo apt-get install -y nodejs
+                    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    nvm install 20
+                    nvm use 20
                     node --version
                     npm --version
                 '''
@@ -24,28 +27,48 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 echo 'Installing dependencies...'
-                sh 'npm ci'
+                sh '''
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    nvm use 20
+                    npm ci
+                '''
             }
         }
         
         stage('Lint') {
             steps {
                 echo 'Running ESLint...'
-                sh 'npm run lint'
+                sh '''
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    nvm use 20
+                    npm run lint
+                '''
             }
         }
 
         stage('Test') {
             steps {
                 echo 'Running Tests...'
-                sh 'npm run test'
+                sh '''
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    nvm use 20
+                    npm run test
+                '''
             }
         }
         
         stage('Build') {
             steps {
                 echo 'Building application...'
-                sh 'npm run build'
+                sh '''
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    nvm use 20
+                    npm run build
+                '''
             }
         }
         
